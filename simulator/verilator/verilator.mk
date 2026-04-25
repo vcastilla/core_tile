@@ -7,6 +7,13 @@ SIM_BIN = $(PROJECT_DIR)/sim
 
 FLAGS ?= 
 
+UNAME := $(shell uname -s)
+ifeq ($(UNAME), Darwin)
+	LD_FLAGS := -pthread -L$(SPIKE_DIR)/build/ -Wl,-rpath $(SPIKE_DIR)/build/ -ldisasm -ldl
+else
+	LD_FLAGS := -pthread -L$(SPIKE_DIR)/build/ -Wl,-rpath=$(SPIKE_DIR)/build/ -ldisasm -ldl
+endif
+
 VERI_FLAGS = \
 	$(foreach flag, $(FLAGS), -D$(flag)) \
 	-DVERILATOR_GCC \
@@ -16,7 +23,7 @@ VERI_FLAGS = \
 	--unroll-count 256 \
 	-Wno-lint -Wno-style -Wno-STMTDLY -Wno-BLKANDNBLK -Wno-fatal \
 	-CFLAGS "-std=c++14 -I$(SPIKE_DIR)/riscv-isa-sim/" \
-	-LDFLAGS "-pthread -L$(SPIKE_DIR)/build/ -Wl,-rpath=$(SPIKE_DIR)/build/ -ldisasm -ldl" \
+	-LDFLAGS "$(LD_FLAGS)" \
 	--exe --savable --no-timing \
 	--trace-fst \
 	--trace-max-array 512 \
