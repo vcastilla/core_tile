@@ -35,6 +35,8 @@ define get_config
 $(patsubst test_%,%,$(firstword $(subst -, ,$(basename $(notdir $(1))))))
 endef
 
+SBT ="java -Xmx1G -Xss8M -jar sbt-launch.jar"
+
 # Spike settings
 
 SPIKE = ./simulator/riscv-isa-sim/build/spike
@@ -55,7 +57,7 @@ build-torture: $(TORTURE_BINARIES)
 # *** Test generation & compilation ***
 
 $(TORTURE_OUTPUT)/%.S: 
-		$(MAKE) -C $(RISCV_TORTURE) gen OPTIONS="-C ../config/$(call get_config, $@).config -o test_$(call get_config, $@)"
+		$(MAKE) -C $(RISCV_TORTURE) gen SBT=$(SBT) OPTIONS="-C ../config/$(call get_config, $@).config -o test_$(call get_config, $@)"
 
 $(TORTURE_OUTPUT)/%.riscv: $(TORTURE_OUTPUT)/%.S
 		$(RISCV_GCC) $(TORTURE_RISCV_GCC_OPTS) $< -o $@
