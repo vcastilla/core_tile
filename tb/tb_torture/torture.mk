@@ -39,7 +39,7 @@ SBT ="java -Xmx1G -Xss8M -jar sbt-launch.jar"
 
 # Spike settings
 
-SPIKE = ./simulator/riscv-isa-sim/build/spike
+SPIKE = ./simulator/reference/build/spike
 SPIKE_OPTS = -l --log-commits --isa=rv64g --mmu-dirty
 
 # Diff script
